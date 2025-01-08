@@ -24,6 +24,7 @@ Flujo de Trabajo
 
 public class FrmMain extends JFrame {
 
+    JFrame frame = new JFrame();
     Button validar = new Button();
     Button visualizar = new Button();
     Button acercaDe = new Button();
