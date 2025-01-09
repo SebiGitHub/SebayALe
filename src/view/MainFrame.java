@@ -1,15 +1,18 @@
 package view;
 
+import controlador.CtrAlumno;
+import model.Alumno;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 
 public class MainFrame extends JFrame {
     private JMenuBar menuBar;
     private JMenu menuValidar, menuVisualizar, menuAcercaDe;
     private JMenuItem menuItemEntrar, menuItemSalir, menuItemDetalle, menuItemResumen, menuItemAcercaDe;
     private JPanel panelValidar, panelDetalle, panelResumen, panelAcercaDe;
+    private Alumno alumnoValidado; // Alumno validado
 
     public MainFrame() {
         // Configuración básica
@@ -48,7 +51,6 @@ public class MainFrame extends JFrame {
         // Inicializar paneles
         panelValidar = new PanelValidar(this);
         panelDetalle = new PanelDetalle();
-        panelResumen = new PanelResumen();
         panelAcercaDe = new PanelAcercaDe();
 
         // Desactivar opciones de menú inicialmente
@@ -84,9 +86,20 @@ public class MainFrame extends JFrame {
         menuItemResumen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setContentPane(panelResumen);
-                revalidate();
-                repaint();
+                // Crear panelResumen con el alumno validado
+                if (alumnoValidado != null) {
+                    panelResumen = new PanelResumen(alumnoValidado);
+                    setContentPane(panelResumen);
+                    revalidate();
+                    repaint();
+                } else {
+                    JOptionPane.showMessageDialog(
+                            MainFrame.this,
+                            "Debe validar un alumno antes de acceder al resumen.",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
             }
         });
         menuItemAcercaDe.addActionListener(new ActionListener() {
@@ -98,16 +111,16 @@ public class MainFrame extends JFrame {
             }
         });
 
-
         // Mostrar panel inicial
         setContentPane(panelValidar);
     }
 
     // Habilita las opciones del menú tras validación
-    public void habilitarMenu() {
+    public void habilitarMenu(Alumno alumno) {
         menuVisualizar.setEnabled(true);
         menuItemDetalle.setEnabled(true);
         menuItemResumen.setEnabled(true);
+        this.alumnoValidado = alumno; // Guardar alumno validado
     }
 
     public static void main(String[] args) {
