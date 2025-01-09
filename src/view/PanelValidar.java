@@ -1,4 +1,6 @@
 package view;
+import controlador.CtrAlumno;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -74,6 +76,22 @@ public class PanelValidar extends JPanel {
         } else {
             mostrarMensaje(false, "Usuario o contraseña incorrectos.");
         }
+    }
+
+    private void validarUsuario2(MainFrame mainFrame) {
+        CtrAlumno ctrA = new CtrAlumno();
+        String usuario = txtUsuario.getText();
+        String contrasena = new String(txtContrasena.getPassword());
+
+        boolean valido = ctrA.validarUsuario(usuario, contrasena);
+
+        if(valido == true){
+            mostrarMensaje(true, "¡Acceso concedido!");
+            mainFrame.habilitarMenu();
+        } else {
+            mostrarMensaje(false, "Usuario o contraseña incorrectos.");
+        }
+
     }
 
     private void mostrarMensaje(boolean exito, String mensaje) {

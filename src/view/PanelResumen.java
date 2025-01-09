@@ -1,5 +1,7 @@
 package view;
 
+import controlador.CtrAlumno;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
@@ -7,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PanelResumen extends JPanel {
-    private JLabel lblNotaMedia, lblNombreAlumno, lblFecha, lblImagen;
+    private JLabel lblNotaMedia, lblNumeroAlumno, lblNombreAlumno, lblFecha, lblImagen;
     private JTable tablaAsignaturas;
     private JButton btnCalcular, btnCambiarFecha;
     private JSpinner datePicker;
@@ -24,15 +26,18 @@ public class PanelResumen extends JPanel {
         JPanel panelCentral = new JPanel(new BorderLayout(10, 10));
 
         // Información del alumno
-        JPanel panelInfo = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel panelInfo = new JPanel(new GridLayout(4, 1, 15, 15));
+        lblNumeroAlumno = new JLabel("Numero: 1", JLabel.CENTER);
         lblNombreAlumno = new JLabel("Nombre: Alumno1", JLabel.CENTER);
         lblNotaMedia = new JLabel("Nota Media: 0.0", JLabel.CENTER);
         lblFecha = new JLabel("Fecha: " + getCurrentDate(), JLabel.CENTER); // Fecha inicial
 
+        lblNumeroAlumno.setFont(new Font("Arial", Font.PLAIN, 16));
         lblNombreAlumno.setFont(new Font("Arial", Font.PLAIN, 16));
         lblNotaMedia.setFont(new Font("Arial", Font.PLAIN, 16));
         lblFecha.setFont(new Font("Arial", Font.PLAIN, 16));
 
+        panelInfo.add(lblNumeroAlumno);
         panelInfo.add(lblNombreAlumno);
         panelInfo.add(lblNotaMedia);
         panelInfo.add(lblFecha);
@@ -62,6 +67,11 @@ public class PanelResumen extends JPanel {
         JSpinner.DateEditor editor = new JSpinner.DateEditor(datePicker, "dd/MM/yyyy");
         datePicker.setEditor(editor);
         btnCambiarFecha = new JButton("Cambiar Fecha");
+
+        CtrAlumno ctrAlumno = new CtrAlumno();
+
+        //Numero es lo que aparece a la derecha de nuevo numero
+        //Date nuevaFecha = (Date) datePicker.getValue();
         btnCambiarFecha.addActionListener(e -> actualizarFecha());
 
         panelFecha.add(new JLabel("Fecha:"));
