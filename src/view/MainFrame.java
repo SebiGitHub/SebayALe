@@ -1,30 +1,9 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-/*
-Flujo de Trabajo
-    Inicio de la App:
-        App.java carga el MainFrame y muestra el menú desactivado.
-    Validación:
-        Usuario introduce usuario y contraseña.
-        Si es correcto:
-            Activa el resto del menú.
-            Carga los datos del alumno validado.
-    Visualización / Detalle:
-        Carga asignaturas del alumno.
-        Permite navegar, modificar notas y guardarlas.
-    Visualización / Resumen:
-        Muestra todos los datos del alumno (incluyendo imagen).
-        Permite calcular la nota media y actualizar si hay discrepancia.
-    Acerca de:
-        Ventana modal informativa sobre el proyecto.
- */
 
-import javax.swing.*;
-import java.awt.*;
 
 public class MainFrame extends JFrame {
     private JMenuBar menuBar;

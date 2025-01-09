@@ -1,6 +1,6 @@
 package view;
-import controlador.CtrAlumno;
 
+import controlador.CtrAlumno;
 import javax.swing.*;
 import java.awt.*;
 
@@ -65,34 +65,30 @@ public class PanelValidar extends JPanel {
         add(panelMensaje, BorderLayout.SOUTH);
     }
 
-    private void validarUsuario4(MainFrame mainFrame) {
-        String usuario = txtUsuario.getText();
-        String contrasena = new String(txtContrasena.getPassword());
-
-        // Ejemplo de validación
-        if ("admin".equals(usuario) && "1234".equals(contrasena)) {
-            mostrarMensaje(true, "¡Acceso concedido!");
-            mainFrame.habilitarMenu();
-        } else {
-            mostrarMensaje(false, "Usuario o contraseña incorrectos.");
-        }
-    }
-
     private void validarUsuario2(MainFrame mainFrame) {
         CtrAlumno ctrA = new CtrAlumno();
         String usuario = txtUsuario.getText();
         String contrasena = new String(txtContrasena.getPassword());
 
+        // Primero validamos
         boolean valido = ctrA.validarUsuario(usuario, contrasena);
 
-        if(valido == true){
+        if (valido) {
             mostrarMensaje(true, "¡Acceso concedido!");
-            mainFrame.habilitarMenu();
+
+            // Si la validación es correcta, intentamos conectarnos a la base de datos
+            try {
+                ctrA.conexion.abrirConexion();
+                mainFrame.habilitarMenu(); // Activamos el menú tras validar y conectar
+            } catch (Exception e) {
+                mostrarMensaje(false, "Error al conectarse a la base de datos.");
+                System.err.println("Error de conexión: " + e.getMessage());
+            }
         } else {
             mostrarMensaje(false, "Usuario o contraseña incorrectos.");
         }
-
     }
+
 
     private void mostrarMensaje(boolean exito, String mensaje) {
         if (exito) {
