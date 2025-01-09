@@ -8,24 +8,44 @@ import java.util.GregorianCalendar;
 
 public class CtrAlumno {
 
-    public conexionesBD conexion;
+    private conexionesBD conexion;
 
     public CtrAlumno(){
         conexion = new conexionesBD(); // Iniciamos la conexion
     }
 
     // Metodo para validar el usuario y contraseña
-    public boolean validarUsuario(String usuario, String contrasena) {
-        boolean valido = false; // Inicializamos como falso
+    public boolean validarUsuario(String usuario, String contrasena){
 
-        if (usuario.equals("root")){
-            if(contrasena.equals("")){
-                valido = true;
+        boolean valido = false;
+        String sentencia = "SELECT * FROM Alumno WHERE usuario = ? AND contrasena = ?";
+
+        try{
+            conexion.abrirConexion();
+            Connection conn = conexion.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sentencia);
+            stmt.setString(1, usuario);
+            stmt.setString(2, contrasena);
+
+            ResultSet rs = stmt.executeQuery();
+            valido = rs.next(); // Si hay un resultado, el usuario es válido
+
+            if (valido){
+                System.out.println("Usuario validad con éxito");
+            } else{
+                System.out.println("Usuario o contraseña incorrectos");
             }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            System.err.println("Error al validar al usuario: " + e.getMessage());
+        } finally {
+            conexion.cerrarConexion();
         }
         return valido;
     }
-
 
     public void actualizarFechaNacimiento(int numero, GregorianCalendar fechaNueva){
 
@@ -56,4 +76,7 @@ public class CtrAlumno {
             conexion.cerrarConexion();
         }
     }
+
+
+
 }
