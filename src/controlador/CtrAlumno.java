@@ -18,23 +18,11 @@ public class CtrAlumno {
     public boolean validarUsuario(String usuario, String contrasena) {
         boolean valido = false; // Inicializamos como falso
 
-
-        try {
-            conexion.abrirConexion();
-            Connection conn = conexion.getConnection();
-
-            if (usuario.equals("root")){
-                if(contrasena.equals("")){
-                    valido = true;
-                }
+        if (usuario.equals("root")){
+            if(contrasena.equals("")){
+                valido = true;
             }
-
-        } catch (Exception e) {
-            System.err.println("Error al validar usuario: " + e.getMessage());
-        } finally {
-            conexion.cerrarConexion();
         }
-
         return valido;
     }
 
