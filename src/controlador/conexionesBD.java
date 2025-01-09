@@ -9,7 +9,7 @@ public class conexionesBD {
 
         try{
             if (connection == null || connection.isClosed()){
-                String nombreBD = "PspDB";
+                String nombreBD = "pspbd";
                 String url = "jdbc:mysql://localhost:3308/"; // Cambia el nombre_base_datos
                 String usuario = "root";
                 String password = "";
