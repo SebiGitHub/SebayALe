@@ -1,5 +1,6 @@
 package view;
 import controlador.CtrAlumno;
+import model.Alumno;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +52,7 @@ public class PanelValidar extends JPanel {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JButton btnValidar = new JButton("Validar");
-        btnValidar.addActionListener(e -> validarUsuario2(mainFrame));
+        btnValidar.addActionListener(e -> validarUsuario(mainFrame));
         panelCentral.add(btnValidar, gbc);
 
         add(panelCentral, BorderLayout.CENTER);
@@ -65,7 +66,7 @@ public class PanelValidar extends JPanel {
         add(panelMensaje, BorderLayout.SOUTH);
     }
 
-    private void validarUsuario2(MainFrame mainFrame) {
+    private void validarUsuario(MainFrame mainFrame) {
         CtrAlumno ctrA = new CtrAlumno();
         String usuario = txtUsuario.getText();
         String contrasena = new String(txtContrasena.getPassword());
@@ -74,7 +75,8 @@ public class PanelValidar extends JPanel {
 
         if(valido == true){
             mostrarMensaje(true, "¡Acceso concedido!");
-            mainFrame.habilitarMenu();
+            Alumno alumno = null;
+            mainFrame.habilitarMenu(alumno);
         } else {
             mostrarMensaje(false, "Usuario o contraseña incorrectos.");
         }
