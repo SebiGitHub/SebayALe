@@ -51,7 +51,7 @@ public class PanelValidar extends JPanel {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JButton btnValidar = new JButton("Validar");
-        btnValidar.addActionListener(e -> validarUsuario2(mainFrame));
+        btnValidar.addActionListener(e -> validarUsuario(mainFrame));
         panelCentral.add(btnValidar, gbc);
 
         add(panelCentral, BorderLayout.CENTER);

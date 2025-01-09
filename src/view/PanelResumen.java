@@ -72,6 +72,7 @@ public class PanelResumen extends JPanel {
 
         //Numero es lo que aparece a la derecha de nuevo numero
         //Date nuevaFecha = (Date) datePicker.getValue();
+        //btnCambiarFecha.addActionListener(e -> ctrAlumno.actualizarFechaNacimiento())
         btnCambiarFecha.addActionListener(e -> actualizarFecha());
 
         panelFecha.add(new JLabel("Fecha:"));
