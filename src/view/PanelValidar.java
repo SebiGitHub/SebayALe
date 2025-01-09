@@ -51,7 +51,7 @@ public class PanelValidar extends JPanel {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JButton btnValidar = new JButton("Validar");
-        btnValidar.addActionListener(e -> validarUsuario(mainFrame));
+        btnValidar.addActionListener(e -> validarUsuario2(mainFrame));
         panelCentral.add(btnValidar, gbc);
 
         add(panelCentral, BorderLayout.CENTER);
@@ -65,7 +65,7 @@ public class PanelValidar extends JPanel {
         add(panelMensaje, BorderLayout.SOUTH);
     }
 
-    private void validarUsuario(MainFrame mainFrame) {
+    private void validarUsuario4(MainFrame mainFrame) {
         String usuario = txtUsuario.getText();
         String contrasena = new String(txtContrasena.getPassword());
 
