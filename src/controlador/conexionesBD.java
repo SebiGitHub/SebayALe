@@ -9,8 +9,8 @@ public class conexionesBD {
 
         try{
             if (connection == null || connection.isClosed()){
-                String nombreBD = "bdPSP";
-                String url = "jdbc:mysql://localhost:3306/"; // Cambia el nombre_base_datos
+                String nombreBD = "PspDB";
+                String url = "jdbc:mysql://localhost:3308/"; // Cambia el nombre_base_datos
                 String usuario = "root";
                 String password = "";
                 connection = DriverManager.getConnection(url + nombreBD, usuario, password);
