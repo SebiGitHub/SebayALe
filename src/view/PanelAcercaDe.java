@@ -15,9 +15,9 @@ public class PanelAcercaDe extends JPanel {
         // Texto de información
         JTextArea txtInfo = new JTextArea(
                 "Versión: 1.0\n" +
-                        "Desarrollado por: Sebi\n" +
-                        "Fecha: Enero 2025\n\n" +
-                        "Descripción:\n" +
+                        "\nDesarrollado por: Sebi y Alex\n" +
+                        "\nFecha: Enero 2025\n" +
+                        "\nDescripción:" +
                         "Esta aplicación permite gestionar alumnos y asignaturas, " +
                         "modificar notas y calcular promedios.\n");
         txtInfo.setFont(new Font("Arial", Font.PLAIN, 16));
