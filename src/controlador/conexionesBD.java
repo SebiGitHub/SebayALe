@@ -9,8 +9,8 @@ public class conexionesBD {
 
         try{
             if (connection == null || connection.isClosed()){
-                String nombreBD = "PspDB";
-                String url = "jdbc:mysql://localhost:3308/"; // Cambia el nombre_base_datos
+                String nombreBD = "bdPSP";
+                String url = "jdbc:mysql://localhost:3306/"; // Cambia el nombre_base_datos
                 String usuario = "root";
                 String password = "";
                 connection = DriverManager.getConnection(url + nombreBD, usuario, password);
@@ -50,7 +50,6 @@ public class conexionesBD {
     }
 
     public Statement getStatementDetalle(){
-
         try{
             // Verificamos si la conexion esta abierta, si no lo está, la abrimos
             if (connection == null || connection.isClosed()){

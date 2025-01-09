@@ -110,7 +110,6 @@ public class MainFrame extends JFrame {
                 repaint();
             }
         });
-
         // Mostrar panel inicial
         setContentPane(panelValidar);
     }
@@ -120,8 +119,12 @@ public class MainFrame extends JFrame {
         menuVisualizar.setEnabled(true);
         menuItemDetalle.setEnabled(true);
         menuItemResumen.setEnabled(true);
-        this.alumnoValidado = alumno; // Guardar alumno validado
+
+        // Pasar el alumno al PanelResumen
+        alumnoValidado = alumno;
+        panelResumen = new PanelResumen(alumnoValidado);
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

@@ -44,8 +44,8 @@ public class PanelResumen extends JPanel {
         lblFechaNacimiento = new JLabel("Fecha Nacimiento: " + alumno.getF_nac(), JLabel.CENTER);
         lblNotaMedia = new JLabel("Nota Media: " + alumno.getN_media(), JLabel.CENTER);
 
-        lblImagen = new JLabel(new ImageIcon(getClass().getResource("/path/to/image/" + alumno.getImagen() + ".png")));
-        lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+        //lblImagen = new JLabel(new ImageIcon(getClass().getResource("C:/Users/Sebas/IdeaProjects/SebayALe/src/recursos/imagenes/" + alumno.getImagen() + ".png")));
+        //lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 
         panelInfo.add(lblNumero);
         panelInfo.add(lblUsuario);
@@ -53,7 +53,7 @@ public class PanelResumen extends JPanel {
         panelInfo.add(lblNotaMedia);
 
         panelCentral.add(panelInfo, BorderLayout.CENTER);
-        panelCentral.add(lblImagen, BorderLayout.WEST);
+        //panelCentral.add(lblImagen, BorderLayout.WEST);
 
         // Tabla de asignaturas
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Asignatura", "Nota"}, 0);
@@ -72,8 +72,6 @@ public class PanelResumen extends JPanel {
         datePicker = new JSpinner(new SpinnerDateModel());
         JSpinner.DateEditor editor = new JSpinner.DateEditor(datePicker, "dd/MM/yyyy");
         datePicker.setEditor(editor);
-        btnCambiarFecha = new JButton("Cambiar Fecha");
-        btnCambiarFecha.addActionListener(e -> actualizarFecha());
 
         panelFecha.add(new JLabel("Nueva Fecha de Nacimiento: "));
         panelFecha.add(datePicker);
@@ -104,19 +102,6 @@ public class PanelResumen extends JPanel {
         for (String[] asignatura : asignaturas) {
             modeloTabla.addRow(asignatura);
         }
-    }
-
-    private void actualizarFecha() {
-        Date nuevaFecha = (Date) datePicker.getValue();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaFormateada = sdf.format(nuevaFecha);
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(nuevaFecha);
-
-        ctrAlumno.actualizarFechaNacimiento(alumno.getNumero(), calendar);
-
-        lblFechaNacimiento.setText("Fecha Nacimiento: " + fechaFormateada);
     }
 
     private void calcularNotaMedia() {

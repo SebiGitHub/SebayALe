@@ -71,17 +71,18 @@ public class PanelValidar extends JPanel {
         String usuario = txtUsuario.getText();
         String contrasena = new String(txtContrasena.getPassword());
 
-        boolean valido = ctrA.validarUsuario(usuario, contrasena);
+        // Obtener el alumno validado
+        Alumno alumno = ctrA.validarUsuario(usuario, contrasena);
 
-        if(valido == true){
+        if (alumno != null) {
             mostrarMensaje(true, "¡Acceso concedido!");
-            Alumno alumno = null;
+            // Pasar el alumno al MainFrame
             mainFrame.habilitarMenu(alumno);
         } else {
             mostrarMensaje(false, "Usuario o contraseña incorrectos.");
         }
-
     }
+
 
     private void mostrarMensaje(boolean exito, String mensaje) {
         if (exito) {
