@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class PanelResumen extends JPanel {
 
@@ -65,16 +66,13 @@ public class PanelResumen extends JPanel {
     private void cargarAsignaturasEnTabla(DefaultTableModel modeloTabla) {
         modeloTabla.setRowCount(0);  // Limpiar la tabla
 
-        // Simulación de datos de asignaturas y notas del alumno
-        List<String[]> asignaturas = List.of(
-                new String[]{"Matemáticas", "8"},
-                new String[]{"Historia", "7"},
-                new String[]{"Ciencias", "9"}
-        );
+        //Map<String, Float> asignaturas = ctrAlumno.obternerAsignaturaPorAlumno();
 
-        for (String[] asignatura : asignaturas) {
+        /*
+        for (String[] asignatura : asignaturas.keySet()) {
             modeloTabla.addRow(asignatura);
         }
+         */
     }
 
     private void calcularNotaMedia() {
