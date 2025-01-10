@@ -51,37 +51,6 @@ public class CtrAlumno {
         return alumno;
     }
 
-
-    public void actualizarFechaNacimiento(int numero, GregorianCalendar fechaNueva){
-
-        String sentencia = "UPDATE Alumno SET fechaNacimiento = ? WHERE numero = ?";
-
-        try{
-            conexion.abrirConexion();
-            Connection conn = conexion.getConnection();
-            PreparedStatement statement = conn.prepareStatement(sentencia);
-
-            // Establecer la fecha directamente desde GregorianCalendar
-            statement.setDate(1, new java.sql.Date(fechaNueva.getTimeInMillis()), fechaNueva);
-            statement.setInt(2, numero);
-
-            int filasActualizadas = statement.executeUpdate();
-
-            if (filasActualizadas > 0){
-                System.out.println("Fecha de nacimiento actualizada correctamente.");
-            } else{
-                System.out.println("No se ha podido encontrar al alumno con el numero proporcionado");
-            }
-
-            statement.close();
-
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar la fecha de nacimiento: " + e.getMessage());
-        } finally {
-            conexion.cerrarConexion();
-        }
-    }
-
     public Alumno obtenerAlumnoPorUsuario(String usuario) {
         Alumno alumno = null;
         String sentencia = "SELECT * FROM Alumno WHERE usuario = ?";
@@ -113,6 +82,4 @@ public class CtrAlumno {
         }
         return alumno;
     }
-
-
 }
