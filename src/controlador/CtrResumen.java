@@ -50,17 +50,17 @@ public class CtrResumen {
         }
     }
 
-    public void calcularNotaMedia(int aluNumero){
+    public float calcularNotaMedia(int aluNumero) {
+        String sentencia = "SELECT AVG(nota) AS promedio FROM Asignatura WHERE aluNumero = ?";
+        float promedio = 0;
 
-        String sentencia = "SELECT AVG(nota) AS promedio FROM Asignaturas WHERE aluNumero = ?";
-
-        try{
+        try {
             conexion.abrirConexion();
             Connection conn = conexion.getConnection();
 
-            if (conn == null){
+            if (conn == null) {
                 System.err.println("Conexión no establecida");
-                return;
+                return 0;
             }
 
             PreparedStatement statement = conn.prepareStatement(sentencia);
@@ -68,27 +68,21 @@ public class CtrResumen {
 
             ResultSet rs = statement.executeQuery();
 
-            if (rs.next()){
-                float promedio = rs.getFloat("promedio");
-                System.out.println("La nota media del alumno con el numero: " + aluNumero + " es: " + promedio);
+            if (rs.next()) {
+                promedio = rs.getFloat("promedio");
             } else {
-                System.out.println("No se han podido encontrar asignaturas para el alumno con número " + aluNumero);
+                System.out.println("No se encontraron asignaturas para el alumno con número " + aluNumero);
             }
 
             rs.close();
             statement.close();
-
         } catch (SQLException e) {
             System.err.println("Error al calcular la nota media del alumno: " + e.getMessage());
         } finally {
             conexion.cerrarConexion();
         }
+
+        return promedio;
     }
-
-
-
-
-
-
 
 }
