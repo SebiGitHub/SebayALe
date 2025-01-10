@@ -2,12 +2,13 @@ package view;
 
 import controlador.CtrAlumno;
 import model.Alumno;
-import model.Asignatura;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Map;
 
 public class PanelResumen extends JPanel {
@@ -48,22 +49,25 @@ public class PanelResumen extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre panel de información y tabla
 
         // Imagen del alumno
-        lblImagenAlumno = new JLabel();
-        lblImagenAlumno.setHorizontalAlignment(JLabel.CENTER);
-        lblImagenAlumno.setPreferredSize(new Dimension(150, 150));
-        lblImagenAlumno.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        add(lblImagenAlumno);
+        ImageIcon imagen = new ImageIcon(convertirBytesAImagen(alumno.getImagen()));
+        Image imagenRedimensionada = imagen.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+        ImageIcon imagenFinal = new ImageIcon(imagenRedimensionada);
+
+        JLabel lblImagen = new JLabel(imagenFinal);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        add(lblImagen, gbc);
 
         add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre imagen y tabla
 
         // Tabla de asignaturas
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Asignatura", "Nota"}, 0);
         tablaAsignaturas = new JTable(modeloTabla);
-
-        // Cargar asignaturas solo después de tener el alumno actualizado
-        if (alumno != null) {
-            cargarAsignaturasEnTabla(modeloTabla);
-        }
 
         JScrollPane scrollTabla = new JScrollPane(tablaAsignaturas);
         scrollTabla.setPreferredSize(new Dimension(400, 150));
@@ -86,11 +90,9 @@ public class PanelResumen extends JPanel {
         modeloTabla.setRowCount(0); // Limpiar la tabla
 
         Map<String, Float> asignaturas = ctrAlumno.obtenerAsignaturasPorAlumno(alumno.getNumero());
-
         for (Map.Entry<String, Float> entry : asignaturas.entrySet()) {
             modeloTabla.addRow(new Object[]{entry.getKey(), entry.getValue()});
         }
-
         tablaAsignaturas.setModel(modeloTabla);
     }
 
@@ -116,6 +118,7 @@ public class PanelResumen extends JPanel {
         }
     }
 
+
     public void actualizarDatosAlumno(Alumno alumno) {
         this.alumno = alumno;
         lblNumero.setText("Número: " + alumno.getNumero());
@@ -123,19 +126,22 @@ public class PanelResumen extends JPanel {
         lblFechaNacimiento.setText("Fecha Nacimiento: " + alumno.getF_nac());
         lblNotaMedia.setText("Nota Media: " + alumno.getN_media());
 
-        // Cargar imagen del alumno
-        if (alumno.getImagen() != null && !alumno.getImagen().isEmpty()) {
-            ImageIcon icon = new ImageIcon(alumno.getImagen());
-            Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-            lblImagenAlumno.setIcon(new ImageIcon(scaledImage));
-        } else {
-            lblImagenAlumno.setIcon(null);
-        }
+
+
 
         // Cargar asignaturas
         cargarAsignaturasEnTabla((DefaultTableModel) tablaAsignaturas.getModel());
-
         revalidate();
         repaint();
+    }
+
+    private Image convertirBytesAImagen(byte[] bytes) {
+        try {
+            InputStream in = new ByteArrayInputStream(bytes);
+            return ImageIO.read(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

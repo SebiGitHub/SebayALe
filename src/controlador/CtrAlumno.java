@@ -39,7 +39,7 @@ public class CtrAlumno {
                         rs.getString("usuario"),
                         rs.getString("contrasena"),
                         rs.getString("f_nac"),
-                        rs.getString("imagen"),
+                        rs.getBytes("imagen"),
                         rs.getInt("nota_media")
                 );
             }

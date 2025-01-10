@@ -1,5 +1,9 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class Alumno {
 
     private int numero;
@@ -7,9 +11,9 @@ public class Alumno {
     private String contrasenia;
     private String f_nac;
     private int n_media;
-    private String imagen; // Cambiado a String para almacenar la ruta de la imagen
+    private byte[] imagen;
 
-    public Alumno(int numero, String usuario, String contrasenia, String f_nac, String imagen, int n_media) {
+    public Alumno(int numero, String usuario, String contrasenia, String f_nac, byte[] imagen, int n_media) {
         this.numero = numero;
         this.usuario = usuario;
         this.contrasenia = contrasenia;
@@ -39,9 +43,10 @@ public class Alumno {
         return n_media;
     }
 
-    public String getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
+
 
     // Setters
     public void setNumero(int numero) {
@@ -64,7 +69,7 @@ public class Alumno {
         this.n_media = n_media;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
 }
