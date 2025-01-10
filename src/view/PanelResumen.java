@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class PanelResumen extends JPanel {
 
-    private JLabel lblTitulo, lblNumero, lblUsuario, lblFechaNacimiento, lblNotaMedia;
+    private JLabel lblTitulo, lblNumero, lblUsuario, lblFechaNacimiento, lblNotaMedia, lblImagenAlumno;
     private JTable tablaAsignaturas;
     private JButton btnCalcular;
     private Alumno alumno;
@@ -28,7 +28,7 @@ public class PanelResumen extends JPanel {
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(lblTitulo);
-        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre título y panel de información
+        add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre título y panel de información
 
         // Información del alumno
         JPanel panelInfo = new JPanel(new GridLayout(4, 1, 10, 10));
@@ -45,13 +45,22 @@ public class PanelResumen extends JPanel {
         panelInfo.add(lblNotaMedia);
 
         add(panelInfo);
-        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre panel de información y tabla
+        add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre panel de información y tabla
+
+        // Imagen del alumno
+        lblImagenAlumno = new JLabel();
+        lblImagenAlumno.setHorizontalAlignment(JLabel.CENTER);
+        lblImagenAlumno.setPreferredSize(new Dimension(150, 150));
+        lblImagenAlumno.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        add(lblImagenAlumno);
+
+        add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre imagen y tabla
 
         // Tabla de asignaturas
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Asignatura", "Nota"}, 0);
         tablaAsignaturas = new JTable(modeloTabla);
 
-        // Cargar las asignaturas sólo después de tener el alumno actualizado
+        // Cargar asignaturas solo después de tener el alumno actualizado
         if (alumno != null) {
             cargarAsignaturasEnTabla(modeloTabla);
         }
@@ -59,7 +68,7 @@ public class PanelResumen extends JPanel {
         JScrollPane scrollTabla = new JScrollPane(tablaAsignaturas);
         scrollTabla.setPreferredSize(new Dimension(400, 150));
         add(scrollTabla);
-        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre tabla y botón
+        add(Box.createRigidArea(new Dimension(0, 20))); // Espacio entre tabla y botón
 
         // Botón para calcular la nota media
         btnCalcular = new JButton("Calcular Nota Media");
@@ -71,31 +80,24 @@ public class PanelResumen extends JPanel {
     private void cargarAsignaturasEnTabla(DefaultTableModel modeloTabla) {
         if (alumno == null) {
             System.err.println("El alumno no está asignado, no se pueden cargar las asignaturas.");
-            return; // Salir si alumno es null
+            return;
         }
 
-        modeloTabla.setRowCount(0);  // Limpiar la tabla
+        modeloTabla.setRowCount(0); // Limpiar la tabla
 
-        // Obtener las asignaturas y sus notas
         Map<String, Float> asignaturas = ctrAlumno.obtenerAsignaturasPorAlumno(alumno.getNumero());
 
-        // Recorrer el mapa y añadir los datos al modelo de la tabla
         for (Map.Entry<String, Float> entry : asignaturas.entrySet()) {
-            String asignatura = entry.getKey();  // Nombre de la asignatura
-            Float nota = entry.getValue();       // Nota de la asignatura
-
-            // Añadir una nueva fila a la tabla con el nombre de la asignatura y la nota
-            modeloTabla.addRow(new Object[]{asignatura, nota});
+            modeloTabla.addRow(new Object[]{entry.getKey(), entry.getValue()});
         }
 
-        // Asignar el modelo actualizado a la tabla
         tablaAsignaturas.setModel(modeloTabla);
     }
 
     private void calcularNotaMedia() {
         if (alumno == null) {
             System.err.println("El alumno no está asignado, no se puede calcular la nota media.");
-            return; // Salir si alumno es null
+            return;
         }
 
         double sumaNotas = 0;
@@ -121,7 +123,16 @@ public class PanelResumen extends JPanel {
         lblFechaNacimiento.setText("Fecha Nacimiento: " + alumno.getF_nac());
         lblNotaMedia.setText("Nota Media: " + alumno.getN_media());
 
-        // Cargar las asignaturas después de actualizar los datos
+        // Cargar imagen del alumno
+        if (alumno.getImagen() != null && !alumno.getImagen().isEmpty()) {
+            ImageIcon icon = new ImageIcon(alumno.getImagen());
+            Image scaledImage = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            lblImagenAlumno.setIcon(new ImageIcon(scaledImage));
+        } else {
+            lblImagenAlumno.setIcon(null);
+        }
+
+        // Cargar asignaturas
         cargarAsignaturasEnTabla((DefaultTableModel) tablaAsignaturas.getModel());
 
         revalidate();

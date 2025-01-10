@@ -7,10 +7,9 @@ public class Alumno {
     private String contrasenia;
     private String f_nac;
     private int n_media;
-    private int imagen;
+    private String imagen; // Cambiado a String para almacenar la ruta de la imagen
 
-
-    public Alumno(int numero, String usuario, String contrasenia, String f_nac, int imagen, int n_media) {
+    public Alumno(int numero, String usuario, String contrasenia, String f_nac, String imagen, int n_media) {
         this.numero = numero;
         this.usuario = usuario;
         this.contrasenia = contrasenia;
@@ -19,7 +18,7 @@ public class Alumno {
         this.n_media = n_media;
     }
 
-    //Getters
+    // Getters
     public int getNumero() {
         return numero;
     }
@@ -40,11 +39,11 @@ public class Alumno {
         return n_media;
     }
 
-    public int getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    //Setters
+    // Setters
     public void setNumero(int numero) {
         this.numero = numero;
     }
@@ -65,13 +64,7 @@ public class Alumno {
         this.n_media = n_media;
     }
 
-    public void setImagen(int imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
-
-
-
-
-
-
 }
