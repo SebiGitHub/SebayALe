@@ -7,128 +7,154 @@ public class CtrDetalles {
     private conexionesBD conexion;
     private ResultSet resultSet;
 
-    public CtrDetalles(){
+    public CtrDetalles() {
         conexion = new conexionesBD();
     }
 
-    public void cargarAsignaturas(){
-
+    public void cargarAsignaturas() {
         String sentencia = "SELECT * FROM Asignatura";
 
-        try{
+        try {
             conexion.abrirConexion();
             Connection conn = conexion.getConnection();
 
-            if (conn == null){
+            if (conn == null) {
                 System.err.println("Conexión no establecida.");
                 return;
             }
 
-            Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-
+            Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             resultSet = statement.executeQuery(sentencia);
 
-            System.out.println("Se han cargado las asignaturas correctamente");
+            // Nos posicionamos en la primera asignatura
+            if (resultSet.next()) {
+                System.out.println("Se han cargado las asignaturas correctamente");
+            }
 
         } catch (SQLException e) {
             System.err.println("Error al cargar las asignaturas: " + e.getMessage());
         }
     }
 
-    public void siguienteAsignatura(){
-
-        try{
-            if (resultSet == null){
-                cargarAsignaturas();
+    public void siguienteAsignatura() {
+        try {
+            if (resultSet == null) {
+                cargarAsignaturas(); // Esto asegura que se cargan las asignaturas si no se ha hecho antes
             }
 
-            if (resultSet.next()){
-                System.out.println("Asignatura actual: " + resultSet.getString("nombre"));
-            }else {
-                System.out.println("No hay mas asignaturas");
-                resultSet.last();
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error, no se puede mover a la siguiente persona: " + e.getMessage());
-        }
-    }
-
-    public void anteriorAsignatura(){
-        try{
-            if (resultSet == null){
-                cargarAsignaturas();
-            }
-
-            if (resultSet.previous()){
+            // Solo navegar al siguiente si el ResultSet está abierto
+            if (resultSet != null && resultSet.next()) {
                 System.out.println("Asignatura actual: " + resultSet.getString("nombre"));
             } else {
-                System.out.println("No hay mas asignaturas anteriores");
+                // Si ya no hay más asignaturas, movernos al último registro
+                System.out.println("No hay más asignaturas, se mueve al último registro.");
+                resultSet.last(); // Asegurarse de estar en el último elemento
             }
         } catch (SQLException e) {
-            System.err.println("Error, no se puede mover a la persona anterior: " + e.getMessage());
+            System.err.println("Error, no se puede mover a la siguiente asignatura: " + e.getMessage());
         }
     }
 
-    public void irPrimero(){
-        try{
-            if (resultSet == null){
-                cargarAsignaturas();
-            }
-
-            if (resultSet.first()){
-                System.out.println("Primera asignatura: " + resultSet.getString("nombre"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error, no se puede mover a la primera asignatura " + e.getMessage());
-        }
-    }
-
-    public void irUltimo(){
+    public void anteriorAsignatura() {
         try {
-            if (resultSet == null){
-                cargarAsignaturas();
+            if (resultSet == null) {
+                cargarAsignaturas(); // Esto asegura que se cargan las asignaturas si no se ha hecho antes
             }
 
-            if (resultSet.last()){
-                System.out.println("Última asignatura: " + resultSet.getString("nombre"));
+            // Solo navegar al anterior si el ResultSet está abierto
+            if (resultSet != null && resultSet.previous()) {
+                System.out.println("Asignatura actual: " + resultSet.getString("nombre"));
+            } else {
+                System.out.println("No hay más asignaturas anteriores.");
             }
         } catch (SQLException e) {
-            System.err.println("Error, no se puede mover a la última asignatura " + e.getMessage());
+            System.err.println("Error, no se puede mover a la asignatura anterior: " + e.getMessage());
         }
     }
 
-    public void guardarNota(int codigo, float nuevaNota){
 
-        String sentencia = "UPDATE Asignatura SET nota = ? WHERE codigo = ?";
+    public String getAsignaturaNombre() throws SQLException {
+        if (resultSet != null) {
+            return resultSet.getString("nombre");
+        }
+        return "";
+    }
 
-        try{
-            conexion.abrirConexion();
-            Connection conn = conexion.getConnection();
+    public float getNotaActual() throws SQLException {
+        if (resultSet != null) {
+            return resultSet.getFloat("nota");
+        }
+        return 0;
+    }
 
-            if (conn == null){
-                System.err.println("No se ha podido establecer la conexión");
-                return;
+    public int getCodigoAsignatura() throws SQLException {
+        if (resultSet != null) {
+            return resultSet.getInt("codigo");
+        }
+        return 0;
+    }
+
+    public void guardarNota(String nota, int idAsignatura) {
+        try {
+            // Guardar la nota en la base de datos
+            String query = "UPDATE Asignatura SET nota = ? WHERE codigo = ?";
+            try (PreparedStatement stmt = conexion.getConnection().prepareStatement(query)) {
+                stmt.setString(1, nota);
+                stmt.setInt(2, idAsignatura);
+                int filasAfectadas = stmt.executeUpdate();  // Realizamos la actualización
+
+                if (filasAfectadas > 0) {
+                    System.out.println("Nota guardada correctamente.");
+                } else {
+                    System.out.println("No se encontró la asignatura.");
+                }
+
+                // Después de la actualización, recargamos el ResultSet con los datos actualizados
+                recargarDatos();
+
+            } catch (SQLException e) {
+                System.err.println("Error al guardar la nota: " + e.getMessage());
             }
 
-            PreparedStatement statement = conn.prepareStatement(sentencia);
-            statement.setFloat(1, nuevaNota);
-            statement.setInt(2, codigo);
+        } catch (Exception e) {
+            System.err.println("Error al guardar la nota: " + e.getMessage());
+        }
+    }
 
-            int filasActualizadas = statement.executeUpdate();
+    public void recargarDatos() {
+        try {
+            // Consultamos de nuevo la base de datos para recargar los datos actualizados
+            String sentencia = "SELECT * FROM Asignatura";
+            Statement stmt = conexion.getStatementResumen();  // Usamos el Statement desde la clase de conexión
 
-            if (filasActualizadas > 0){
-                System.out.println("Nota actualizada correctamente para la asignatura con el codigo: " + codigo);
+            if (stmt != null) {
+                resultSet = stmt.executeQuery(sentencia);  // Recargamos el ResultSet
+                System.out.println("Datos recargados correctamente.");
+            } else {
+                System.out.println("Error al obtener el Statement.");
             }
-
-            statement.close();
 
         } catch (SQLException e) {
-            System.err.println("Error, no se ha podido guardar la nota " + e.getMessage());
-        } finally {
-            conexion.cerrarConexion();
+            System.err.println("Error al recargar los datos: " + e.getMessage());
         }
+    }
 
+    // Métodos para verificar si hay asignaturas anteriores o siguientes
+    public boolean tieneAsignaturaAnterior() {
+        try {
+            return resultSet != null && !resultSet.isFirst();
+        } catch (SQLException e) {
+            System.err.println("Error al verificar asignatura anterior: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean tieneAsignaturaSiguiente() {
+        try {
+            return resultSet != null && !resultSet.isLast();
+        } catch (SQLException e) {
+            System.err.println("Error al verificar asignatura siguiente: " + e.getMessage());
+            return false;
+        }
     }
 }
