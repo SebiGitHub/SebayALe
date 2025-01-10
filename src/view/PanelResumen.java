@@ -6,93 +6,66 @@ import model.Alumno;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class PanelResumen extends JPanel {
 
-    private JLabel lblNumero, lblUsuario, lblFechaNacimiento, lblNotaMedia, lblImagen;
+    private JLabel lblTitulo, lblNumero, lblUsuario, lblFechaNacimiento, lblNotaMedia;
     private JTable tablaAsignaturas;
-    private JButton btnCalcular, btnCambiarFecha;
-    private JSpinner datePicker;
+    private JButton btnCalcular;
     private Alumno alumno;
     private CtrAlumno ctrAlumno;
 
-    public PanelResumen(Alumno alumno) {
-        this.alumno = alumno;
+    public PanelResumen() {
         ctrAlumno = new CtrAlumno();
 
-        setLayout(new BorderLayout(20, 20));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Título
-        JLabel lblTitulo = new JLabel("Resumen del Alumno", JLabel.CENTER);
+        lblTitulo = new JLabel("Resumen del Alumno", JLabel.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
-        add(lblTitulo, BorderLayout.NORTH);
-
-        // Panel central
-        JPanel panelCentral = new JPanel(new BorderLayout(10, 10));
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(lblTitulo);
+        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre título y panel de información
 
         // Información del alumno
-        JPanel panelInfo = new JPanel(new GridLayout(5, 1, 15, 15));
+        JPanel panelInfo = new JPanel(new GridLayout(4, 1, 10, 10));
+        panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        lblNumero = new JLabel("Número: " + alumno.getNumero(), JLabel.CENTER);
-        lblUsuario = new JLabel("Usuario: " + alumno.getUsuario(), JLabel.CENTER);
-        lblFechaNacimiento = new JLabel("Fecha Nacimiento: " + alumno.getF_nac(), JLabel.CENTER);
-        lblNotaMedia = new JLabel("Nota Media: " + alumno.getN_media(), JLabel.CENTER);
-
-        //lblImagen = new JLabel(new ImageIcon(getClass().getResource("C:/Users/Sebas/IdeaProjects/SebayALe/src/recursos/imagenes/" + alumno.getImagen() + ".png")));
-        //lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNumero = new JLabel("Número: ");
+        lblUsuario = new JLabel("Usuario: ");
+        lblFechaNacimiento = new JLabel("Fecha Nacimiento: ");
+        lblNotaMedia = new JLabel("Nota Media: ");
 
         panelInfo.add(lblNumero);
         panelInfo.add(lblUsuario);
         panelInfo.add(lblFechaNacimiento);
         panelInfo.add(lblNotaMedia);
 
-        panelCentral.add(panelInfo, BorderLayout.CENTER);
-        //panelCentral.add(lblImagen, BorderLayout.WEST);
+        add(panelInfo);
+        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre panel de información y tabla
 
         // Tabla de asignaturas
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Asignatura", "Nota"}, 0);
         tablaAsignaturas = new JTable(modeloTabla);
         cargarAsignaturasEnTabla(modeloTabla);
+
         JScrollPane scrollTabla = new JScrollPane(tablaAsignaturas);
-        panelCentral.add(scrollTabla, BorderLayout.SOUTH);
-
-        add(panelCentral, BorderLayout.CENTER);
-
-        // Panel inferior
-        JPanel panelInferior = new JPanel(new BorderLayout(10, 10));
-
-        // DatePicker para la fecha
-        JPanel panelFecha = new JPanel(new FlowLayout());
-        datePicker = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(datePicker, "dd/MM/yyyy");
-        datePicker.setEditor(editor);
-
-        panelFecha.add(new JLabel("Nueva Fecha de Nacimiento: "));
-        panelFecha.add(datePicker);
-        panelFecha.add(btnCambiarFecha);
-
-        panelInferior.add(panelFecha, BorderLayout.NORTH);
+        scrollTabla.setPreferredSize(new Dimension(400, 150));
+        add(scrollTabla);
+        add(Box.createRigidArea(new Dimension(0, 20)));  // Espacio entre tabla y botón
 
         // Botón para calcular la nota media
         btnCalcular = new JButton("Calcular Nota Media");
+        btnCalcular.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnCalcular.addActionListener(e -> calcularNotaMedia());
-        JPanel panelBoton = new JPanel();
-        panelBoton.add(btnCalcular);
-        panelInferior.add(panelBoton, BorderLayout.SOUTH);
-
-        add(panelInferior, BorderLayout.SOUTH);
+        add(btnCalcular);
     }
 
     private void cargarAsignaturasEnTabla(DefaultTableModel modeloTabla) {
-        modeloTabla.setRowCount(0); // Limpiar la tabla
+        modeloTabla.setRowCount(0);  // Limpiar la tabla
 
-        // Aquí puedes reemplazar por una consulta al controlador para obtener asignaturas
+        // Simulación de datos de asignaturas y notas del alumno
         List<String[]> asignaturas = List.of(
                 new String[]{"Matemáticas", "8"},
                 new String[]{"Historia", "7"},
@@ -119,5 +92,15 @@ public class PanelResumen extends JPanel {
             JOptionPane.showMessageDialog(this, "Nota media diferente. Actualizando...");
             alumno.setN_media((int) nuevaNotaMedia);
         }
+    }
+
+    public void actualizarDatosAlumno(Alumno alumno) {
+        this.alumno = alumno;
+        lblNumero.setText("Número: " + alumno.getNumero());
+        lblUsuario.setText("Usuario: " + alumno.getUsuario());
+        lblFechaNacimiento.setText("Fecha Nacimiento: " + alumno.getF_nac());
+        lblNotaMedia.setText("Nota Media: " + "0");
+        revalidate();
+        repaint();
     }
 }

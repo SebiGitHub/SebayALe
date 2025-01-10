@@ -11,8 +11,10 @@ public class MainFrame extends JFrame {
     private JMenuBar menuBar;
     private JMenu menuValidar, menuVisualizar, menuAcercaDe;
     private JMenuItem menuItemEntrar, menuItemSalir, menuItemDetalle, menuItemResumen, menuItemAcercaDe;
-    private JPanel panelValidar, panelDetalle, panelResumen, panelAcercaDe;
+    private JPanel panelValidar, panelDetalle, panelAcercaDe;
     private Alumno alumnoValidado; // Alumno validado
+    private PanelResumen panelResumen;
+
 
     public MainFrame() {
         // Configuración básica
@@ -83,12 +85,16 @@ public class MainFrame extends JFrame {
                 repaint();
             }
         });
+        // Inicializar panelResumen sin asignar alumno
+        panelResumen = new PanelResumen();
+
+        // Modificación del menú para mostrar el panel resumen
         menuItemResumen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Crear panelResumen con el alumno validado
                 if (alumnoValidado != null) {
-                    panelResumen = new PanelResumen(alumnoValidado);
+                    // Actualizar contenido del panelResumen con el alumno validado
+                    panelResumen.actualizarDatosAlumno(alumnoValidado);
                     setContentPane(panelResumen);
                     revalidate();
                     repaint();
@@ -120,9 +126,7 @@ public class MainFrame extends JFrame {
         menuItemDetalle.setEnabled(true);
         menuItemResumen.setEnabled(true);
 
-        // Pasar el alumno al PanelResumen
         alumnoValidado = alumno;
-        panelResumen = new PanelResumen(alumnoValidado);
     }
 
 
