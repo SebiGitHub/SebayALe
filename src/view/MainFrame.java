@@ -60,6 +60,7 @@ public class MainFrame extends JFrame {
         menuItemDetalle.setEnabled(false);
         menuItemResumen.setEnabled(false);
 
+
         // Eventos de menú
         menuItemEntrar.addActionListener(new ActionListener() {
             @Override
@@ -85,6 +86,7 @@ public class MainFrame extends JFrame {
                 repaint();
             }
         });
+
         // Inicializar panelResumen sin asignar alumno
         panelResumen = new PanelResumen();
 
@@ -116,9 +118,11 @@ public class MainFrame extends JFrame {
                 repaint();
             }
         });
+
         // Mostrar panel inicial
         setContentPane(panelValidar);
     }
+
 
     // Habilita las opciones del menú tras validación
     public void habilitarMenu(Alumno alumno) {

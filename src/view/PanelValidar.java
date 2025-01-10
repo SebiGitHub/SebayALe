@@ -55,6 +55,12 @@ public class PanelValidar extends JPanel {
         btnValidar.addActionListener(e -> validarUsuario(mainFrame));
         panelCentral.add(btnValidar, gbc);
 
+        // Botón de limpiar
+        JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.addActionListener(e -> limpiarCampos());  // Llama a limpiarCampos
+        gbc.gridy = 3;  // Coloca el botón debajo de "Validar"
+        panelCentral.add(btnLimpiar, gbc);
+
         add(panelCentral, BorderLayout.CENTER);
 
         // Panel inferior para el mensaje de error o éxito
@@ -83,12 +89,23 @@ public class PanelValidar extends JPanel {
         }
     }
 
-
     private void mostrarMensaje(boolean exito, String mensaje) {
         if (exito) {
             lblMensaje.setText("<html><font color='green'><b>✔</b> " + mensaje + "</font></html>");
         } else {
             lblMensaje.setText("<html><font color='red'><b>✘</b> " + mensaje + "</font></html>");
         }
+    }
+
+    public void limpiarCampos() {
+        // Limpiar los campos de texto
+        txtUsuario.setText("");       // Vaciar campo de usuario
+        txtContrasena.setText("");    // Vaciar campo de contraseña
+
+        // Limpiar el mensaje de éxito o fracaso
+        lblMensaje.setText("");       // Vaciar el mensaje (si tienes un JLabel para mostrarlo)
+
+        // Si deseas ocultar el JLabel del mensaje:
+        // lblMensaje.setVisible(false);
     }
 }
