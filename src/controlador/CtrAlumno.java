@@ -1,19 +1,22 @@
 package controlador;
 
 import model.Alumno;
+import model.Asignatura;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CtrAlumno {
 
     private conexionesBD conexion;
 
-    public CtrAlumno(){
-        conexion = new conexionesBD(); // Iniciamos la conexion
+
+    public CtrAlumno() {
+        conexion = new conexionesBD(); // Iniciamos la conexión
     }
 
     // Metodo para validar el usuario y contraseña
@@ -51,4 +54,40 @@ public class CtrAlumno {
         return alumno;
     }
 
+    // Metodo para obtener las asignaturas de un alumno
+    public Map<String, Float> obtenerAsignaturasPorAlumno(int aluNumero) {
+        Map<String, Float> asignaturas = new HashMap<>();
+        String sentencia = "SELECT nombre, nota FROM Asignatura WHERE aluNumero = ?";
+
+
+        try {
+            conexion.abrirConexion();
+            Connection conn = conexion.getConnection();
+            if (conn == null) {
+                System.err.println("Conexión no establecida.");
+            }
+
+            // Preparar y ejecutar la consulta
+            PreparedStatement statement = conn.prepareStatement(sentencia);
+            statement.setInt(1, aluNumero);
+            ResultSet rs = statement.executeQuery();
+
+            // Procesar los resultados
+            while (rs.next()) {
+                String nombre = rs.getString("nombre");
+                Float nota = rs.getFloat("nota");
+                asignaturas.put(nombre, nota);
+            }
+
+            // Cerrar recursos
+            rs.close();
+            statement.close();
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener asignaturas: " + e.getMessage());
+        } finally {
+            conexion.cerrarConexion();
+        }
+        return asignaturas;
+    }
 }

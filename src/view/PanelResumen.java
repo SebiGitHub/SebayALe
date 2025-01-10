@@ -2,6 +2,7 @@ package view;
 
 import controlador.CtrAlumno;
 import model.Alumno;
+import model.Asignatura;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -49,7 +50,11 @@ public class PanelResumen extends JPanel {
         // Tabla de asignaturas
         DefaultTableModel modeloTabla = new DefaultTableModel(new Object[]{"Asignatura", "Nota"}, 0);
         tablaAsignaturas = new JTable(modeloTabla);
-        cargarAsignaturasEnTabla(modeloTabla);
+
+        // Cargar las asignaturas sólo después de tener el alumno actualizado
+        if (alumno != null) {
+            cargarAsignaturasEnTabla(modeloTabla);
+        }
 
         JScrollPane scrollTabla = new JScrollPane(tablaAsignaturas);
         scrollTabla.setPreferredSize(new Dimension(400, 150));
@@ -64,18 +69,35 @@ public class PanelResumen extends JPanel {
     }
 
     private void cargarAsignaturasEnTabla(DefaultTableModel modeloTabla) {
+        if (alumno == null) {
+            System.err.println("El alumno no está asignado, no se pueden cargar las asignaturas.");
+            return; // Salir si alumno es null
+        }
+
         modeloTabla.setRowCount(0);  // Limpiar la tabla
 
-        //Map<String, Float> asignaturas = ctrAlumno.obternerAsignaturaPorAlumno();
+        // Obtener las asignaturas y sus notas
+        Map<String, Float> asignaturas = ctrAlumno.obtenerAsignaturasPorAlumno(alumno.getNumero());
 
-        /*
-        for (String[] asignatura : asignaturas.keySet()) {
-            modeloTabla.addRow(asignatura);
+        // Recorrer el mapa y añadir los datos al modelo de la tabla
+        for (Map.Entry<String, Float> entry : asignaturas.entrySet()) {
+            String asignatura = entry.getKey();  // Nombre de la asignatura
+            Float nota = entry.getValue();       // Nota de la asignatura
+
+            // Añadir una nueva fila a la tabla con el nombre de la asignatura y la nota
+            modeloTabla.addRow(new Object[]{asignatura, nota});
         }
-         */
+
+        // Asignar el modelo actualizado a la tabla
+        tablaAsignaturas.setModel(modeloTabla);
     }
 
     private void calcularNotaMedia() {
+        if (alumno == null) {
+            System.err.println("El alumno no está asignado, no se puede calcular la nota media.");
+            return; // Salir si alumno es null
+        }
+
         double sumaNotas = 0;
         int totalAsignaturas = tablaAsignaturas.getRowCount();
 
@@ -97,7 +119,11 @@ public class PanelResumen extends JPanel {
         lblNumero.setText("Número: " + alumno.getNumero());
         lblUsuario.setText("Usuario: " + alumno.getUsuario());
         lblFechaNacimiento.setText("Fecha Nacimiento: " + alumno.getF_nac());
-        lblNotaMedia.setText("Nota Media: " + "0");
+        lblNotaMedia.setText("Nota Media: " + alumno.getN_media());
+
+        // Cargar las asignaturas después de actualizar los datos
+        cargarAsignaturasEnTabla((DefaultTableModel) tablaAsignaturas.getModel());
+
         revalidate();
         repaint();
     }
